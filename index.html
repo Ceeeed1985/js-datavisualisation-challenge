@@ -24,8 +24,8 @@
   <link href="./assets/style.css" rel="stylesheet" type="text/css">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <!-- <link rel="stylesheet" href="./assets/font-awesome.min.css"> -->
-  <!-- <link rel="stylesheet" href="./assets/statexpflat.css"> -->
+  <link rel="stylesheet" href="./assets/font-awesome.min.css">
+  <link rel="stylesheet" href="./assets/statexpflat.css">
   <link rel="stylesheet" href="./assets/statexpflat-grid.css">
 
   <style>
@@ -801,15 +801,18 @@
 
             <!-- AJOUT DE MON GRAPHIQUE -->
 
-              <label for="countries">Sélectionnez le pays :</label>
-              <select id="countries" multiple></select>
-
-              <canvas id="chart1" aria-label="chart" role="img"></canvas>
-
-              <label for="years">Sélectionnez l'année :</label>
-              <select id="years" multiple></select>
-
-              <canvas id="chart2" aria-label="chart" role="img"></canvas>
+            <div id="chartContainer">
+              <div>
+                <label for="yearSelect">Select Year: </label>
+                <select id="yearSelect"></select>
+                <canvas id="barChart"></canvas>
+              </div>
+              <div>
+                <label for="countrySelect">Select Country: </label>
+                <select id="countrySelect"></select>
+                <canvas id="lineChart"></canvas>
+              </div>
+            </div>
             
 
 
