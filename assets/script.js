@@ -56,9 +56,6 @@
         const ctx = document.getElementById('barChart').getContext('2d');
         const yearData = data.map(d => d[year]);
   
-        console.log("Creating bar chart for year:", year);
-        console.log("Year data:", yearData);
-  
         const chartData = {
           labels: countries,
           datasets: [{
