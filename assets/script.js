@@ -135,50 +135,133 @@
       createLineChart(countries[0]);
 
 
+//DEUXIEME GRAPHIQUE//
 
 
+// Fonction pour lire les données de table2
+function readTableData2() {
+  const table2 = document.getElementById('table2');
+  if (!table2) {
+    console.error('Table #table2 not found.');
+    return { dataTable2: [], countriesTable2: [] };
+  }
 
+  const rowsTable2 = table2.querySelectorAll('tbody tr');
+  const countriesTable2 = [];
+  const dataTable2 = [];
 
+  rowsTable2.forEach((rowTable2) => {
+    const countryElement = rowTable2.querySelector('td:nth-child(2)');
+    const value0709Element = rowTable2.querySelector('td:nth-child(3)');
+    const value1012Element = rowTable2.querySelector('td:nth-child(4)');
 
+    if (countryElement && value0709Element && value1012Element) {
+      const countryTable2 = countryElement.textContent.trim();
+      const value0709 = parseFloat(value0709Element.textContent);
+      const value1012 = parseFloat(value1012Element.textContent);
 
+      if (!isNaN(value0709) && !isNaN(value1012)) {
+        countriesTable2.push(countryTable2);
+        dataTable2.push({
+          country: countryTable2,
+          '2007-09': value0709,
+          '2010-12': value1012
+        });
+      } else {
+        console.error('Invalid numerical value found in row:', rowTable2);
+      }
+    } else {
+      console.error('Failed to read data from row:', rowTable2);
+    }
+  });
 
+  return { dataTable2, countriesTable2 };
+}
 
+function populateCountrySelect2(countries) {
+  const select = document.getElementById('countrySelect2');
+  if (!select) {
+    console.error('Select element #countrySelect2 not found.');
+    return;
+  }
 
+  countries.forEach((country) => {
+    const option = document.createElement('option');
+    option.textContent = country;
+    select.appendChild(option);
+  });
+}
 
+function createComparisonChart2(data, selectedCountry) {
+  const ctx = document.getElementById('comparisonChart2').getContext('2d');
+  const { dataTable2 } = data;
 
+  // Trouver les données du pays sélectionné
+  const countryData = dataTable2.find(entry => entry.country === selectedCountry);
 
-// const firstRow = table1.querySelector('tbody tr');
-// const selectYears = document.getElementById('years');
+  if (!countryData) {
+    console.error(`No data found for country: ${selectedCountry}`);
+    return;
+  }
 
+  // Vérifier et détruire le graphique existant s'il y en a un
+  if (window.comparisonChart) {
+    window.comparisonChart.destroy();
+  }
 
+  // Création du graphique en barres avec les données du pays sélectionné
+  window.comparisonChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: ['2007-09', '2010-12'],
+      datasets: [
+        {
+          label: selectedCountry,
+          backgroundColor: ['rgba(75, 192, 192, 0.2)', 'rgba(153, 102, 255, 0.2)'],
+          borderColor: ['rgba(75, 192, 192, 1)', 'rgba(153, 102, 255, 1)'],
+          borderWidth: 1,
+          data: [countryData['2007-09'], countryData['2010-12']],
+        },
+      ],
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      scales: {
+        y: {
+          beginAtZero: true,
+          title: {
+            display: true,
+            text: 'Prison population per 100,000 inhabitants'
+          }
+        },
+        x: {
+          title: {
+            display: true,
+            text: 'Year'
+          }
+        }
+      }
+    }
+  });
+}
 
+// Fonction pour mettre à jour le graphique en fonction du pays sélectionné
+function updateComparisonChart2(selectedCountry) {
+  const data = readTableData2(); // Recharger les données de la table si nécessaire
+  createComparisonChart2(data, selectedCountry);
+}
 
+// Event listener pour le changement de sélection du pays
+document.getElementById('countrySelect2').addEventListener('change', function(e) {
+  const selectedCountry = e.target.value;
+  updateComparisonChart2(selectedCountry);
+});
 
-
-
-// const years = [];
-
-// firstRow.querySelectorAll('th').forEach((cell, index) =>{
-//     if (index > 1){
-//     years.push(cell.textContent.trim());
-//     }
-// });
-
-// function chooseYear(){
-//     years.forEach(year => {
-//         const option = document.createElement('option');
-//         option.textContent = year;
-//         option.value = year;
-//         selectYears.appendChild(option);
-        
-//     } )
-// }
-
-// chooseYear();
-
-// console.log(selectYears);
-
-// selectYears.addEventListener('change', () => {
-//     const selectedYear = selectYears.value;
-//     console.log(selectedYear)
-// })
+// Initialisation du graphique avec le premier pays par défaut
+document.addEventListener('DOMContentLoaded', function() {
+  const data = readTableData2(); // Charger les données initiales
+  const initialCountry = data.countriesTable2[0]; // Premier pays par défaut
+  populateCountrySelect2(data.countriesTable2); // Peupler le menu déroulant
+  createComparisonChart2(data, initialCountry); // Créer le graphique avec le premier pays par défaut
+});
