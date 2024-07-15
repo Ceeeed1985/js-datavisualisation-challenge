@@ -262,3 +262,72 @@ document.addEventListener('DOMContentLoaded', function() {
   populateCountrySelect2(data.countriesTable2); // Peupler le menu déroulant
   createComparisonChart2(data, initialCountry); // Créer le graphique avec le premier pays par défaut
 });
+
+
+// GRAPHIQUE DYNAMIQUE
+
+
+document.addEventListener("DOMContentLoaded", function () {
+  const ctx = document.getElementById('chart4').getContext('2d');
+  let chart;
+
+  async function fetchData() {
+      try {
+          const response = await fetch('https://canvasjs.com/services/data/datapoints.php?ts=' + new Date().getTime());
+          const data = await response.json();
+          return data;
+      } catch (error) {
+          console.error('Error fetching the data:', error);
+          return [];
+      }
+  }
+
+  function createChart(data) {
+      const labels = data.map((point, index) => index);
+      const values = data.map(point => point[1]);
+
+      chart = new Chart(ctx, {
+          type: 'line',
+          data: {
+              labels: labels,
+              datasets: [{
+                  label: 'Data Points',
+                  data: values,
+                  borderColor: 'rgba(75, 192, 192, 1)',
+                  borderWidth: 1,
+                  fill: false
+              }]
+          },
+          options: {
+              scales: {
+                  x: {
+                      beginAtZero: true
+                  },
+                  y: {
+                      beginAtZero: true
+                  }
+              }
+          }
+      });
+  }
+
+  async function updateChart() {
+      const data = await fetchData();
+      if (data.length > 0) {
+          const values = data.map(point => point[1]);
+          chart.data.datasets[0].data = values;
+          chart.update();
+      } else {
+          console.log('No data to update the chart.');
+      }
+  }
+
+  async function initializeChart() {
+      const initialData = await fetchData();
+      createChart(initialData);
+
+      setInterval(updateChart, 3000);
+  }
+
+  initializeChart();
+});
