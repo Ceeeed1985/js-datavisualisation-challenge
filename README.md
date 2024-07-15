@@ -2,10 +2,10 @@
 Exercice sur la Data Visualisation BeCode
 
 ## Objectif :
-être capable d'utiliser des données d'un fichier html, et de les mettre en évidence dans des graphiques dynamique
+être capable d'utiliser des données d'un fichier html, et de les mettre en évidence dans des graphiques dynamiques
 
 ## Etat d'avancement
-status : en cours
+status : DONE
  - 02/04/2024 : branch dev02 => meilleure préparation
     - révision des différentes notions nécessaires (chart.js - javascript)
     - projet repensé depuis le début
@@ -21,3 +21,4 @@ status : en cours
 ## Les problèmes rencontrés
  - Nommer les nombreuses variables et fonctions
  - Difficulté à aller chercher éléments du fichier html
+ - Affichage sur github pages
